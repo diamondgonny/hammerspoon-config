@@ -1,4 +1,4 @@
--- key mapping for vim 
+-- key mapping for vim
 -- Convert input source as English and sends 'escape' if inputSource is not English.
 -- Sends 'escape' if inputSource is English.
 -- key binding reference --> https://www.hammerspoon.org/docs/hs.hotkey.html
@@ -20,4 +20,3 @@ function convert_to_eng_with_esc()
 end
 
 esc_bind = hs.hotkey.new({}, 'escape', convert_to_eng_with_esc):enable()
-
