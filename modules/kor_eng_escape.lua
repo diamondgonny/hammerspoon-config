@@ -1,6 +1,6 @@
 -- key mapping for vim
--- Convert input source as English and sends 'escape' if inputSource is not English.
--- Sends 'escape' if inputSource is English.
+-- Convert input source as English and sends 'escape' if inputSource is not English
+-- Sends 'escape' if inputSource is English
 -- key binding reference --> https://www.hammerspoon.org/docs/hs.hotkey.html
 -- defaults write -g InitialKeyRepeat -int 15 # normal minimum is 15 (225 ms)
 -- defaults write -g KeyRepeat -int 1 # normal minimum is 2 (30 ms)
