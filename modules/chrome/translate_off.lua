@@ -1,18 +1,15 @@
--- This script creates a shortcut for easy chatbot access (large screen) in Google Chrome
+-- This script creates a shortcut for Deepl's 'Show original (page)' in Google Chrome
 -- It's only active within Google Chrome, and is disabled in other programs
-local trans_func = require('modules.chrome.macro')
+local macro = require('modules.chrome.macro')
 
 local chromeHotkey = nil
 
 -- Function to enable the hotkey when Google Chrome is active
 local function enableChromeHotkey()
     if not chromeHotkey then
-        chromeHotkey = hs.hotkey.bind({"cmd", "ctrl"}, "k", function()
-            if trans_func.isGoogleChromeActive() then
-                trans_func.performKeySequenceForChatbot(2, true, 5000)
-                trans_func.performKeySequenceForChatbot(4, true, 500000)
-                trans_func.performKeySequenceForChatbot(1, true, 500000)
-                trans_func.performKeySequenceForChatbot(2, false, 0)
+        chromeHotkey = hs.hotkey.bind({"cmd", "ctrl"}, "b", function()
+            if macro.isGoogleChromeActive() then
+                macro.performKeySequenceForTranslate(6)
             end
         end)
     end

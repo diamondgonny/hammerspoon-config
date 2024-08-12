@@ -12,7 +12,7 @@ local function keyStroke(modifiers, key, delay)
     end
 end
 
-local function performKeySequence(tabPressCount)
+local function performKeySequenceForTranslate(tabPressCount)
     -- Press "cmd-shift-y"
     keyStroke({"cmd", "shift"}, "y", 70000)  -- Delay for 70ms
 
@@ -42,6 +42,6 @@ end
 
 return {
   isGoogleChromeActive = isGoogleChromeActive,
-  performKeySequence = performKeySequence,
+  performKeySequenceForTranslate = performKeySequenceForTranslate,
   performKeySequenceForChatbot = performKeySequenceForChatbot
 }
