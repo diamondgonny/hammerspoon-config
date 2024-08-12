@@ -1,15 +1,15 @@
--- This script creates a shortcut for Deepl's 'Translate Page' in Google Chrome
+-- This script creates a shortcut for Deepl's 'Show original (page)' in Google Chrome
 -- It's only active within Google Chrome, and is disabled in other programs
-local trans_func = require('modules.trans_func')
+local trans_func = require('modules.chrome.macro')
 
 local chromeHotkey = nil
 
 -- Function to enable the hotkey when Google Chrome is active
 local function enableChromeHotkey()
     if not chromeHotkey then
-        chromeHotkey = hs.hotkey.bind({"cmd"}, "b", function()
+        chromeHotkey = hs.hotkey.bind({"cmd", "ctrl"}, "b", function()
             if trans_func.isGoogleChromeActive() then
-                trans_func.performKeySequence(8)
+                trans_func.performKeySequence(6)
             end
         end)
     end
