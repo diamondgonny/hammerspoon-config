@@ -45,16 +45,16 @@ function reset_boxes()
 end
 
 function draw_rectangle(target_draw, x, y, width, height, fill_color)
-  -- 그릴 영역 크기를 잡는다
-  target_draw:setSize(hs.geometry.rect(x, y, width, height))
-  -- 그릴 영역의 위치를 잡는다
-  target_draw:setTopLeft(hs.geometry.point(x, y))
+    -- 그릴 영역 크기를 잡는다
+    target_draw:setSize(hs.geometry.rect(x, y, width, height))
+    -- 그릴 영역의 위치를 잡는다
+    target_draw:setTopLeft(hs.geometry.point(x, y))
 
-  target_draw:setFillColor(fill_color)
-  target_draw:setFill(true)
-  target_draw:setAlpha(box_alpha)
-  target_draw:setLevel(hs.drawing.windowLevels.overlay)
-  target_draw:setStroke(false)
-  target_draw:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-  target_draw:show()
+    target_draw:setFillColor(fill_color)
+    target_draw:setFill(true)
+    target_draw:setAlpha(box_alpha)
+    target_draw:setLevel(hs.drawing.windowLevels.overlay)
+    target_draw:setStroke(false)
+    target_draw:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
+    target_draw:show()
 end
