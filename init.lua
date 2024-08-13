@@ -1,6 +1,3 @@
 require('modules.inputsource_aurora')
 require('modules.kor_eng_escape')
-require('modules.chrome.translate_on')
-require('modules.chrome.translate_off')
-require('modules.chrome.chatbot_access')
-require('modules.chrome.chatbot_access_widescreen')
+-- require('modules.chrome_hotkey')
