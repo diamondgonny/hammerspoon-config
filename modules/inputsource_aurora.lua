@@ -4,13 +4,13 @@ local box_height = 24
 local box_alpha = 0.35
 local GREEN = hs.drawing.color.osx_green
 
--- 입력소스 변경 이벤트에 이벤트 리스너를 달아준다
-hs.keycodes.inputSourceChanged(function()
-    disable_show()
-    if hs.keycodes.currentSourceID() ~= inputEnglish then
-        enable_show()
-    end
-end)
+function newBox()
+    return hs.drawing.rectangle(hs.geometry.rect(0,0,0,0))
+end
+
+function reset_boxes()
+    boxes = {}
+end
 
 function enable_show()
     reset_boxes()
@@ -36,14 +36,6 @@ function disable_show()
     reset_boxes()
 end
 
-function newBox()
-    return hs.drawing.rectangle(hs.geometry.rect(0,0,0,0))
-end
-
-function reset_boxes()
-    boxes = {}
-end
-
 function draw_rectangle(target_draw, x, y, width, height, fill_color)
     -- 그릴 영역 크기를 잡는다
     target_draw:setSize(hs.geometry.rect(x, y, width, height))
@@ -58,3 +50,11 @@ function draw_rectangle(target_draw, x, y, width, height, fill_color)
     target_draw:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
     target_draw:show()
 end
+
+-- 입력소스 변경 이벤트에 이벤트 리스너를 달아준다
+hs.keycodes.inputSourceChanged(function()
+    disable_show()
+    if hs.keycodes.currentSourceID() ~= inputEnglish then
+        enable_show()
+    end
+end)
