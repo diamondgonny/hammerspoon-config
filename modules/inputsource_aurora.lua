@@ -8,7 +8,6 @@ local soundToggle = hs.sound.getByName("Tink")
 
 function sync_aurora()
     local currentSource = hs.keycodes.currentSourceID()
-    -- 입력소스가 변경되었을 때만 효과음 재생
     if currentSource ~= lastInputSource then
         soundToggle:play()
         lastInputSource = currentSource
@@ -53,11 +52,8 @@ function reset_boxes()
 end
 
 function draw_rectangle(target_draw, x, y, width, height, fill_color)
-    -- 그릴 영역 크기를 잡는다
     target_draw:setSize(hs.geometry.rect(x, y, width, height))
-    -- 그릴 영역의 위치를 잡는다
     target_draw:setTopLeft(hs.geometry.point(x, y))
-
     target_draw:setFillColor(fill_color)
     target_draw:setFill(true)
     target_draw:setAlpha(box_alpha)
