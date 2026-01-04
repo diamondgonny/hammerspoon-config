@@ -3,10 +3,19 @@ local inputEnglish = "com.apple.keylayout.ABC"
 local box_height = 29
 local box_alpha = 0.35
 local GREEN = hs.drawing.color.osx_green
+local lastInputSource = hs.keycodes.currentSourceID()
+local soundToggle = hs.sound.getByName("Tink")
 
 function sync_aurora()
+    local currentSource = hs.keycodes.currentSourceID()
+    -- 입력소스가 변경되었을 때만 효과음 재생
+    if currentSource ~= lastInputSource then
+        soundToggle:play()
+        lastInputSource = currentSource
+    end
+
     disable_show()
-    if hs.keycodes.currentSourceID() ~= inputEnglish then
+    if currentSource ~= inputEnglish then
         enable_show()
     end
 end
