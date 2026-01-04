@@ -68,6 +68,6 @@ end
 -- 3. 1, 2의 시간 차이로 인해 입력소스가 바뀌었을 때 aurora 상태가 언어 상태와 일치하지 않는 경우가 생김
 
 -- 5초에 한 번씩 aurora 상태가 언어 상태와 일치하는지 확인한다
-hs.timer.doEvery(5, sync_aurora)
+-- hs.timer.doEvery(5, sync_aurora)
 -- 입력소스 변경 이벤트에 이벤트 리스너를 달아준다
 hs.keycodes.inputSourceChanged(sync_aurora)
