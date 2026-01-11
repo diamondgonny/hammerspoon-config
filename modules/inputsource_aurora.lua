@@ -1,8 +1,9 @@
-local boxes = {}
-local inputEnglish = "com.apple.keylayout.ABC"
-local box_height = 29
-local box_alpha = 0.35
+local INPUT_ENGLISH = "com.apple.keylayout.ABC"
+local BOX_HEIGHT = 29
+local BOX_ALPHA = 0.35
 local GREEN = hs.drawing.color.osx_green
+
+local boxes = {}
 local soundPool = {}
 local soundPoolIndex = 1
 
@@ -32,7 +33,7 @@ local function draw_rectangle(target_draw, x, y, width, height, fill_color)
     target_draw:setTopLeft(hs.geometry.point(x, y))
     target_draw:setFillColor(fill_color)
     target_draw:setFill(true)
-    target_draw:setAlpha(box_alpha)
+    target_draw:setAlpha(BOX_ALPHA)
     target_draw:setLevel(hs.drawing.windowLevels.overlay)
     target_draw:setStroke(false)
     target_draw:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
@@ -45,11 +46,11 @@ local function enable_show()
         local frame = scr:fullFrame()
 
         local box = newBox()
-        draw_rectangle(box, frame.x, frame.y, frame.w, box_height, GREEN)
+        draw_rectangle(box, frame.x, frame.y, frame.w, BOX_HEIGHT, GREEN)
         table.insert(boxes, box)
 
         local box2 = newBox()
-        draw_rectangle(box2, frame.x, frame.y + frame.h - 10, frame.w, box_height, GREEN)
+        draw_rectangle(box2, frame.x, frame.y + frame.h - 10, frame.w, BOX_HEIGHT, GREEN)
         table.insert(boxes, box2)
     end)
 end
@@ -66,7 +67,7 @@ end
 local function sync_aurora()
     local currentSource = hs.keycodes.currentSourceID()
     disable_show()
-    if currentSource ~= inputEnglish then
+    if currentSource ~= INPUT_ENGLISH then
         enable_show()
     end
 end
