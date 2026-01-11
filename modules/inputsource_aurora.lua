@@ -6,28 +6,40 @@ local GREEN = hs.drawing.color.osx_green
 local soundPool = {}
 local soundPoolIndex = 1
 
-function play_capslock_sound()
+local function play_capslock_sound()
     if #soundPool == 0 then return end
     soundPool[soundPoolIndex]:stop()
     soundPool[soundPoolIndex]:play()
     soundPoolIndex = soundPoolIndex % #soundPool + 1
 end
 
-function on_capslock(event)
+local function on_capslock(event)
     -- keyCode 255: 입력소스 전환 이벤트
     if event:getKeyCode() == 255 then play_capslock_sound() end
     return false
 end
 
-function sync_aurora()
-    local currentSource = hs.keycodes.currentSourceID()
-    disable_show()
-    if currentSource ~= inputEnglish then
-        enable_show()
-    end
+local function reset_boxes()
+    boxes = {}
 end
 
-function enable_show()
+local function newBox()
+    return hs.drawing.rectangle(hs.geometry.rect(0,0,0,0))
+end
+
+local function draw_rectangle(target_draw, x, y, width, height, fill_color)
+    target_draw:setSize(hs.geometry.rect(x, y, width, height))
+    target_draw:setTopLeft(hs.geometry.point(x, y))
+    target_draw:setFillColor(fill_color)
+    target_draw:setFill(true)
+    target_draw:setAlpha(box_alpha)
+    target_draw:setLevel(hs.drawing.windowLevels.overlay)
+    target_draw:setStroke(false)
+    target_draw:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
+    target_draw:show()
+end
+
+local function enable_show()
     reset_boxes()
     hs.fnutils.each(hs.screen.allScreens(), function(scr)
         local frame = scr:fullFrame()
@@ -42,7 +54,7 @@ function enable_show()
     end)
 end
 
-function disable_show()
+local function disable_show()
     hs.fnutils.each(boxes, function(box)
         if box ~= nil then
             box:delete()
@@ -51,24 +63,12 @@ function disable_show()
     reset_boxes()
 end
 
-function newBox()
-    return hs.drawing.rectangle(hs.geometry.rect(0,0,0,0))
-end
-
-function reset_boxes()
-    boxes = {}
-end
-
-function draw_rectangle(target_draw, x, y, width, height, fill_color)
-    target_draw:setSize(hs.geometry.rect(x, y, width, height))
-    target_draw:setTopLeft(hs.geometry.point(x, y))
-    target_draw:setFillColor(fill_color)
-    target_draw:setFill(true)
-    target_draw:setAlpha(box_alpha)
-    target_draw:setLevel(hs.drawing.windowLevels.overlay)
-    target_draw:setStroke(false)
-    target_draw:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
-    target_draw:show()
+local function sync_aurora()
+    local currentSource = hs.keycodes.currentSourceID()
+    disable_show()
+    if currentSource ~= inputEnglish then
+        enable_show()
+    end
 end
 
 -- 1. Event Trigger (inputSourceChanged)로 신호가 발생하나 어떤 입력소스가 활성화되었는지 안 알려줌
@@ -78,7 +78,7 @@ end
 -- 5초에 한 번씩 aurora 상태가 언어 상태와 일치하는지 확인한다
 -- hs.timer.doEvery(5, sync_aurora)
 
-function setup_watchers()
+local function setup_watchers()
     -- 리로드 시 이전 인스턴스를 정리한다
     if hs.inputsource_aurora and hs.inputsource_aurora.capslockWatcher then
         hs.inputsource_aurora.capslockWatcher:stop()

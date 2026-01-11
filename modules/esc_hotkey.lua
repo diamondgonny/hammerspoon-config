@@ -8,7 +8,7 @@
 local inputEnglish = "com.apple.keylayout.ABC"
 local esc_bind
 
-function back_to_eng()
+local function back_to_eng()
     local inputSource = hs.keycodes.currentSourceID()
     if inputSource ~= inputEnglish then
         -- hs.eventtap.keyStroke({}, 'right')
