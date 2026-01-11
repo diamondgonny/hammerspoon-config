@@ -6,6 +6,7 @@ local GREEN = hs.drawing.color.osx_green
 local boxes = {}
 local soundPool = {}
 local soundPoolIndex = 1
+local recheckTimer = nil
 
 local function play_capslock_sound()
     if #soundPool == 0 then return end
@@ -72,10 +73,25 @@ local function sync_aurora()
     end
 end
 
+local function on_input_source_changed()
+    sync_aurora()
+    if recheckTimer then
+        recheckTimer:stop()
+        recheckTimer = nil
+    end
+    recheckTimer = hs.timer.doAfter(0.02, sync_aurora)
+    if hs.inputsource_aurora then
+        hs.inputsource_aurora.recheckTimer = recheckTimer
+    end
+end
+
 local function setup_watchers()
     -- 리로드 시 이전 인스턴스를 정리한다
     if hs.inputsource_aurora and hs.inputsource_aurora.capslockWatcher then
         hs.inputsource_aurora.capslockWatcher:stop()
+    end
+    if hs.inputsource_aurora and hs.inputsource_aurora.recheckTimer then
+        hs.inputsource_aurora.recheckTimer:stop()
     end
     -- 사운드 풀을 초기화한다
     soundPool = {}
@@ -90,8 +106,8 @@ local function setup_watchers()
     -- 입력소스 변경 이벤트에 이벤트 리스너를 달아준다
     -- 1) 이벤트 트리거 (inputSourceChanged)로 신호가 발생하나 어떤 입력소스가 활성화되었는지 안 알려줌
     -- 2) 그래서 추가로 macos에 hs.keycodes.currentSourceID()로 정보 요청
-    -- 3) 1, 2의 시간 차이로 인해 입력소스가 바뀌었을 때 aurora 상태가 언어 상태와 일치하지 않는 경우가 생김
-    hs.keycodes.inputSourceChanged(sync_aurora)
+    -- 3) 1, 2의 시간차로 인해 입력소스가 바뀌었을 때 aurora 상태가 언어 상태와 불일치하는 경우가 생김 -> recheckTimer
+    hs.keycodes.inputSourceChanged(on_input_source_changed)
 end
 
 setup_watchers()
