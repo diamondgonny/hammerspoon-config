@@ -3,16 +3,24 @@ local inputEnglish = "com.apple.keylayout.ABC"
 local box_height = 29
 local box_alpha = 0.35
 local GREEN = hs.drawing.color.osx_green
-local lastInputSource = hs.keycodes.currentSourceID()
-local soundToggle = hs.sound.getByName("Tink")
+local soundPool = {}
+local soundPoolIndex = 1
+
+function play_capslock_sound()
+    if #soundPool == 0 then return end
+    soundPool[soundPoolIndex]:stop()
+    soundPool[soundPoolIndex]:play()
+    soundPoolIndex = soundPoolIndex % #soundPool + 1
+end
+
+function on_capslock(event)
+    -- keyCode 255: 입력소스 전환 이벤트
+    if event:getKeyCode() == 255 then play_capslock_sound() end
+    return false
+end
 
 function sync_aurora()
     local currentSource = hs.keycodes.currentSourceID()
-    if currentSource ~= lastInputSource then
-        soundToggle:play()
-        lastInputSource = currentSource
-    end
-
     disable_show()
     if currentSource ~= inputEnglish then
         enable_show()
@@ -69,5 +77,24 @@ end
 
 -- 5초에 한 번씩 aurora 상태가 언어 상태와 일치하는지 확인한다
 -- hs.timer.doEvery(5, sync_aurora)
--- 입력소스 변경 이벤트에 이벤트 리스너를 달아준다
-hs.keycodes.inputSourceChanged(sync_aurora)
+
+function setup_watchers()
+    -- 리로드 시 이전 인스턴스를 정리한다
+    if hs.inputsource_aurora and hs.inputsource_aurora.capslockWatcher then
+        hs.inputsource_aurora.capslockWatcher:stop()
+    end
+    -- 사운드 풀을 초기화한다
+    soundPool = {}
+    for _ = 1, 4 do
+        local sound = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
+        if sound then table.insert(soundPool, sound) end
+    end
+    -- Capslock 키 입력 시 사운드를 재생하는 watcher를 등록한다
+    hs.inputsource_aurora = {
+        capslockWatcher = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, on_capslock):start()
+    }
+    -- 입력소스 변경 이벤트에 이벤트 리스너를 달아준다
+    hs.keycodes.inputSourceChanged(sync_aurora)
+end
+
+setup_watchers()
