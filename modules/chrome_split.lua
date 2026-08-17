@@ -5,7 +5,7 @@
 --      검증하고 URL 열기
 --   참고) GC 방지를 위해 작업하는 동안 M이라는 테이블 객체를 활용함
 
-local POLL_INTERVAL = 0.20 -- (초 단위)
+local POLL_INTERVAL = 0.10 -- (초 단위)
 local POLL_TIMEOUT  = 2.00
 local HOTKEY_MODS = { "cmd", "alt" }
 local HOTKEY_KEY = ","
