@@ -10,7 +10,10 @@ local POLL_TIMEOUT  = 2.00
 local HOTKEY_MODS = { "cmd", "alt" }
 local HOTKEY_KEY = ","
 local CHROME_BUNDLE_ID = "com.google.Chrome"
-local EMPTY_SPLIT_PANE_URL = "chrome://tab-search.top-chrome/split_new_tab_page"
+local EMPTY_SPLIT_PANE_URLS = {
+    "chrome://new-tab-page/",
+    "chrome://tab-search.top-chrome/split_new_tab_page",
+}
 local M = {}
 local splitWorkerOccupied = false
 
@@ -34,16 +37,20 @@ end
 
 local function setUrlIfNewPane(base)
     local safeUrl = base.url:gsub('\\', '\\\\'):gsub('"', '\\"')
+    local paneUrlChecks = {}
+    for _, prefix in ipairs(EMPTY_SPLIT_PANE_URLS) do
+        paneUrlChecks[#paneUrlChecks + 1] = string.format('(URL of active tab of w starts with "%s")', prefix)
+    end
     local script = string.format([[
         tell application "Google Chrome"
             set w to front window
-            if ((id of active tab of w) as string is not "%s") and (count of tabs of w is %d) and (URL of active tab of w starts with "%s") then
+            if ((id of active tab of w) as string is not "%s") and (count of tabs of w is %d) and (%s) then
                 set URL of active tab of w to "%s"
                 return "set"
             end if
             return "wait"
         end tell
-    ]], base.id, base.tabCount + 1, EMPTY_SPLIT_PANE_URL, safeUrl)
+    ]], base.id, base.tabCount + 1, table.concat(paneUrlChecks, " or "), safeUrl)
     local ok, res = hs.osascript.applescript(script)
     if ok then return res end
     return nil
